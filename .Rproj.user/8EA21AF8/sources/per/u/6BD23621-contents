@@ -1,0 +1,60 @@
+library(dplyr)
+library(stringr)
+
+# Step 1: Store original variable names as labels
+labels <- colnames(data)
+
+# Step 2: Programmatically shorten variable names and ensure uniqueness
+shortened_names <- labels %>%
+  str_replace_all("\\s+", "_") %>%   # Replace spaces with underscores
+  str_replace_all("[^[:alnum:]_]", "") %>%   # Remove non-alphanumeric characters
+  str_sub(1, 30)                     # Truncate to 30 characters for brevity
+
+# Ensure unique names by appending numeric suffixes to duplicates
+shortened_names <- make.names(shortened_names, unique = TRUE)
+
+# Step 3: Rename variables and add labels
+data <- data %>%
+  rename_with(~ shortened_names, everything())
+
+# Step 4: Add a `data_labels` tibble to store original and shortened names
+data_labels <- tibble(
+  variable = shortened_names,
+  label = labels
+)
+
+# View the updated data and labels
+print(data)
+print(data_labels)
+library(dplyr)
+library(stringr)
+
+# Step 1: Store original variable names as labels
+labels <- colnames(data)
+
+# Step 2: Programmatically shorten variable names and ensure uniqueness
+shortened_names <- labels %>%
+  str_replace_all("\\s+", "_") %>%   # Replace spaces with underscores
+  str_replace_all("[^[:alnum:]_]", "") %>%   # Remove non-alphanumeric characters
+  str_sub(1, 30)                     # Truncate to 30 characters for brevity
+shortened_names <- make.names(shortened_names, unique = TRUE)  # Ensure unique names
+
+# Step 3: Rename columns and retain original names as labels
+for (i in seq_along(data)) {
+  attr(data[[i]], "label") <- labels[i]  # Add original name as a label
+}
+
+# Apply the shortened names to the dataset
+colnames(data) <- shortened_names
+
+# Step 4: Check results
+# View dataset with shortened names
+print(data)
+
+# View labels for each variable
+variable_labels <- tibble(
+  variable = shortened_names,
+  label = sapply(data, function(x) attr(x, "label"))
+)
+print(variable_labels)
+str(data)

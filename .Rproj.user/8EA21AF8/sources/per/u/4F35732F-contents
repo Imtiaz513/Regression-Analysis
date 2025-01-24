@@ -1,0 +1,20 @@
+# Normalize constructs and elements (optional)
+constructs <- data.frame(
+  Safety = data$Safety,
+  Comfort = data$Comfort,
+  Cultural_Connection = data$Welcoming  # Assuming 'Welcoming' represents cultural connection
+)
+
+elements <- data.frame(
+  Greenery = data$Greenery,
+  Seating = data$Seating,
+  Barriers = data$Barriers,
+  Pathways = data$Pathways,
+  Lighting = data$Lighting,
+  Signage = data$Signage,
+  Hazards = data$Hazards,
+  Buildings = data$Buildings,
+  Street = data$Street,
+  Transition = data$Transition
+)
+str(data)

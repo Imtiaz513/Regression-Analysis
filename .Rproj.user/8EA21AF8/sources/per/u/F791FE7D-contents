@@ -1,0 +1,49 @@
+# Perform regression
+safety_model <- lm(Safety ~ Greenery + Seating + Barriers + Pathways + Lighting + Signage + Hazards + Buildings + Street + Transition, data = data)
+
+# View regression results
+summary(safety_model)
+# Extract coefficients (exclude intercept)
+coef_safety <- abs(safety_model$coefficients[-1])  # Ignore the intercept
+total_coef <- sum(coef_safety)  # Sum of absolute coefficients
+
+# Calculate percentage impacts
+percentage_impact_safety <- (coef_safety / total_coef) * 100
+
+# Create a data frame for visualization
+impact_df <- data.frame(
+  Element = names(coef_safety),
+  Percentage_Impact = percentage_impact_safety
+)
+
+# View the percentage impact
+print(impact_df)
+# Example for Comfort
+comfort_model <- lm(Comfort ~ Greenery + Seating + Barriers + Pathways + Lighting + Signage + Hazards + Buildings + Street + Transition, data = data)
+summary(comfort_model)
+
+# Calculate percentage impacts for Comfort
+coef_comfort <- abs(comfort_model$coefficients[-1])
+percentage_impact_comfort <- (coef_comfort / sum(coef_comfort)) * 100
+impact_df_comfort <- data.frame(
+  Element = names(coef_comfort),
+  Percentage_Impact = percentage_impact_comfort
+)
+print(impact_df_comfort)
+library(ggplot2)
+
+# Bar chart for Safety
+ggplot(impact_df, aes(x = Element, y = Percentage_Impact)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Percentage Impact of Elements on Safety", y = "Percentage Impact", x = "Element")
+
+# Bar chart for Comfort
+ggplot(impact_df_comfort, aes(x = Element, y = Percentage_Impact)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Percentage Impact of Elements on Comfort", y = "Percentage Impact", x = "Element")
+
+# Create a new Word document
+doc <- read_docx()
+

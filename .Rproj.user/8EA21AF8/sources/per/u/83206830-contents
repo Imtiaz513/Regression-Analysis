@@ -1,0 +1,92 @@
+install.packages("officer")
+install.packages("flextable")
+install.packages("ggplot2")
+
+library(officer)
+library(flextable)
+library(ggplot2)
+# Ensure the data frame has the relevant columns (replace this with your actual data)
+data <- data.frame(
+  Safety = rnorm(46, 7, 1),
+  Comfort = rnorm(46, 6.5, 1),
+  Greenery = rnorm(46, 8, 1),
+  Seating = rnorm(46, 7, 1),
+  Barriers = rnorm(46, 6, 1),
+  Pathways = rnorm(46, 5.5, 1),
+  Lighting = rnorm(46, 7, 1),
+  Signage = rnorm(46, 5, 1),
+  Hazards = rnorm(46, 6, 1),
+  Buildings = rnorm(46, 4.5, 1),
+  Street = rnorm(46, 3.5, 1),
+  Transition = rnorm(46, 5.5, 1)
+)
+# Perform regression analysis for Safety
+safety_model <- lm(Safety ~ Greenery + Seating + Barriers + Pathways + Lighting +
+                     Signage + Hazards + Buildings + Street + Transition, data = data)
+
+# Extract coefficients
+coef_safety <- abs(safety_model$coefficients[-1])  # Exclude intercept
+total_coef <- sum(coef_safety)  # Total sum of coefficients
+
+# Calculate percentage contributions
+percentage_contribution_safety <- (coef_safety / total_coef) * 100
+
+# Create a data frame for contributions
+impact_safety <- data.frame(
+  Element = names(coef_safety),
+  Percentage_Contribution = percentage_contribution_safety
+)
+# Create a Word document
+doc <- read_docx()
+
+# Add title
+doc <- doc %>%
+  body_add_par("Impact of Garden Elements on Safety", style = "heading 1")
+
+# Convert the table to flextable and add to the document
+impact_table_safety <- flextable(impact_safety)
+doc <- doc %>%
+  body_add_flextable(impact_table_safety) %>%
+  body_add_par("")
+
+# Save the document
+print(doc, target = "Impact_Safety.docx")
+# Perform regression analysis for Comfort
+comfort_model <- lm(Comfort ~ Greenery + Seating + Barriers + Pathways + Lighting +
+                      Signage + Hazards + Buildings + Street + Transition, data = data)
+
+# Extract coefficients
+coef_comfort <- abs(comfort_model$coefficients[-1])  # Exclude intercept
+total_coef_comfort <- sum(coef_comfort)  # Total sum of coefficients
+
+# Calculate percentage contributions
+percentage_contribution_comfort <- (coef_comfort / total_coef_comfort) * 100
+
+# Create a data frame for contributions
+impact_comfort <- data.frame(
+  Element = names(coef_comfort),
+  Percentage_Contribution = percentage_contribution_comfort
+)
+
+# Add the Comfort table to the document
+doc <- doc %>%
+  body_add_par("Impact of Garden Elements on Comfort", style = "heading 1") %>%
+  body_add_flextable(flextable(impact_comfort)) %>%
+  body_add_par("")
+
+ggplot(impact_safety, aes(x = Element, y = Percentage_Contribution)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(title = "Percentage Contribution of Elements to Safety",
+       x = "Element",
+       y = "Percentage Contribution (%)") +
+  theme_minimal()
+
+ggplot(impact_comfort, aes(x = Element, y = Percentage_Contribution)) +
+  geom_bar(stat = "identity", fill = "darkgreen") +
+  labs(title = "Percentage Contribution of Elements to Comfort",
+       x = "Element",
+       y = "Percentage Contribution (%)") +
+  theme_minimal()
+print(doc, target = "Impact_Analysis.docx")
+
+
