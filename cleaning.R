@@ -15,14 +15,14 @@ library(stringr)
 # Step 1: Store original variable names as labels
 labels <- colnames(data)
 
-# Step 2: Programmatically shorten variable names
+# Step 2:- Programmatically shorten variable names
 # Remove spaces, special characters, and make concise names
 shortened_names <- labels %>%
   str_replace_all("\\s+", "_") %>%  # Replace spaces with underscores
   str_replace_all("[^[:alnum:]_]", "") %>%  # Remove non-alphanumeric characters
   str_sub(1, 30)  # Limit to 30 characters for brevity
 
-# Step 3: Rename variables and add labels
+# Step 3:- Rename variables and add labels
 data <- data %>%
   rename_with(~ shortened_names, everything())
 
