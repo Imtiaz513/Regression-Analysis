@@ -1,4 +1,4 @@
-########
+--########--
 # Removing the first two rows
 remove(data)
 data<-responses_1_
@@ -15,7 +15,7 @@ library(stringr)
 # Step 1: Store original variable names as labels
 labels <- colnames(data)
 
-# Step 2:- Programmatically shorten variable names
+-# Step 2:- Programmatically shorten variable names
 # Remove spaces, special characters, and make concise names
 shortened_names <- labels %>%
   str_replace_all("\\s+", "_") %>%  # Replace spaces with underscores
